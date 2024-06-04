@@ -2,6 +2,19 @@
 
 import supabase from './supabase';
 
+export async function addCabin(newCabin) {
+  let { data, error } = await supabase
+    .from('cabins')
+    .insert([newCabin])
+    .select();
+
+  if (error) {
+    console.error(error);
+    throw new Error('Cabin could not be created.');
+  }
+  return data;
+}
+
 export async function getCabins() {
   let { data, error } = await supabase.from('cabins').select('*');
 
