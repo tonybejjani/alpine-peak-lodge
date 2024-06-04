@@ -8,7 +8,6 @@ import Button from '../../ui/Button';
 import FileInput from '../../ui/FileInput';
 import Textarea from '../../ui/Textarea';
 import { useForm } from 'react-hook-form';
-import { useState } from 'react';
 
 const FormRow = styled.div`
   display: grid;
@@ -48,6 +47,11 @@ const Error = styled.span`
 
 function CreateCabinForm() {
   const { register, handleSubmit } = useForm();
+
+  function onSubmit(data) {
+    console.log(data);
+  }
+
   return (
     <Form onSubmit={handleSubmit(onSubmit)}>
       <FormRow>
