@@ -1,11 +1,12 @@
 /** @format */
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { getCabins } from '../services/apiCabins';
 import Heading from '../ui/Heading';
 import Row from '../ui/Row';
 import CabinTable from '../features/cabins/CabinTable';
-
+import Button from '../ui/Button';
+import CreateCabinForm from '../features/cabins/CreateCabinForm';
 // function Cabins() {
 //   useEffect(function () {
 //     console.log(getCabins());
@@ -19,6 +20,8 @@ import CabinTable from '../features/cabins/CabinTable';
 // }
 
 function Cabins() {
+  const [showForm, setShowForm] = useState(false);
+
   return (
     <>
       <Row type="horizontal">
@@ -27,6 +30,9 @@ function Cabins() {
       </Row>
       <Row>
         <CabinTable />
+
+        <Button onClick={() => setShowForm((show) => !show)}></Button>
+        {showForm && <CreateCabinForm />}
       </Row>
     </>
   );
