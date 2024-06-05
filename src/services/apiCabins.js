@@ -2,7 +2,7 @@
 
 import supabase from './supabase';
 
-export async function addCabin(newCabin) {
+export async function createCabin(newCabin) {
   let { data, error } = await supabase
     .from('cabins')
     .insert([newCabin])
