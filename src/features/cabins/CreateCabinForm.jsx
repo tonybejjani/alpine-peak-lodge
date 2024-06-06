@@ -18,7 +18,7 @@ function CreateCabinForm() {
   const { register, handleSubmit, reset, getValues, formState } = useForm();
   const { errors } = formState;
 
-  console.log(errors);
+  // console.log(errors);
   const queryClient = useQueryClient();
   const {
     isLoading: isCreating,
@@ -37,11 +37,12 @@ function CreateCabinForm() {
   });
 
   function onSubmit(data) {
-    mutate(data);
+    // console.log(data);
+    mutate({ ...data, image: data.image[0] });
   }
 
   function onError(errors) {
-    console.log(errors);
+    // console.log(errors);
   }
   return (
     //here mutate is passed data as an argument. mutate(data) by handleSubmit
@@ -108,7 +109,11 @@ function CreateCabinForm() {
       </FormRow>
 
       <FormRow label="Cabin Photo">
-        <FileInput id="image" accept="image/*" />
+        <FileInput
+          id="image"
+          accept="image/*"
+          {...register('image', { required: 'This field is required' })}
+        />
       </FormRow>
 
       <FormRow>

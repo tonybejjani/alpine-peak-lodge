@@ -1,6 +1,5 @@
 /** @format */
 
-import { useForm } from 'react-hook-form';
 import styled from 'styled-components';
 
 /** @format */
@@ -41,7 +40,6 @@ const Error = styled.span`
 `;
 
 function FormRow({ label, error, children }) {
-  console.log(children.props);
   return (
     <StyledFormRow>
       {label && <Label htmlFor={children.props.id}>{label}</Label>}
