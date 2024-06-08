@@ -57,7 +57,7 @@ function CabinRow({ cabin }) {
 
   const [showForm, setShowForm] = useState(false);
 
-  const { isDeleting, mutate } = useDeleteCabin();
+  const { isDeleting, deleteCabin } = useDeleteCabin();
 
   return (
     <>
@@ -69,7 +69,7 @@ function CabinRow({ cabin }) {
         <Discount>{formatCurrency(discount)}</Discount>
         <div>
           <button onClick={() => setShowForm((value) => !value)}>Edit</button>
-          <button onClick={() => mutate(cabinId)} disabled={isDeleting}>
+          <button onClick={() => deleteCabin(cabinId)} disabled={isDeleting}>
             Delete
           </button>
         </div>
