@@ -12,19 +12,17 @@ import FormRow from '../../ui/FormRow';
 
 import { createEditCabin } from '../../services/apiCabins';
 
-function CreateCabinForm({ cabin = {} }) {
-  const { id: editCabinId, ...cabinEditValues } = cabin;
+function CreateCabinForm({ cabinToEdit = {} }) {
+  const { id: cabinEditId, ...editValues } = cabinToEdit;
 
-  console.log(cabin);
-  const isEditSession = Boolean(editCabinId);
+  const isEditSession = Boolean(cabinEditId);
 
   const { register, handleSubmit, reset, getValues, formState } = useForm({
-    defaultValues: { ...cabinEditValues },
+    defaultValues: isEditSession ? editValues : {},
   });
-
   const { errors } = formState;
 
-  // console.log(isEditSession);
+  // console.log(errors);
   const queryClient = useQueryClient();
   const {
     isLoading: isCreating,
@@ -37,23 +35,19 @@ function CreateCabinForm({ cabin = {} }) {
       queryClient.invalidateQueries({
         queryKey: ['cabins'],
       });
-      // reset();
+      reset();
     },
     onError: (err) => toast.error(err.message),
   });
 
-  const {
-    isLoading: isEditing,
-
-    mutate: editCabin,
-  } = useMutation({
-    mutationFn: createEditCabin,
+  const { isLoading: isEditing, mutate: editCabin } = useMutation({
+    mutationFn: ({ newCabinData, id }) => createEditCabin(newCabinData, id),
     onSuccess: () => {
       toast.success('Cabin successfully edited.');
       queryClient.invalidateQueries({
         queryKey: ['cabins'],
       });
-      // reset();
+      reset();
     },
     onError: (err) => toast.error(err.message),
   });
@@ -61,21 +55,17 @@ function CreateCabinForm({ cabin = {} }) {
   const isWorking = isCreating || isEditing;
 
   function onSubmit(data) {
-    const image = data?.image[0]?.name ? data.image[0] : cabinEditValues.image;
+    const image = data.image[0].name ? data.image[0] : data.image;
 
     if (isEditSession) {
-      console.log('editCabin');
       editCabin({
-        newCabin: {
-          ...data,
-          image,
-        },
-        id: editCabinId,
+        newCabinData: { ...data, image },
+        id: cabinEditId,
       });
     } else {
-      console.log('createCabin');
       createCabin({
-        newCabin: { ...data, image },
+        ...data,
+        image: image,
       });
     }
   }
@@ -83,7 +73,6 @@ function CreateCabinForm({ cabin = {} }) {
   function onError(errors) {
     // console.log(errors);
   }
-
   return (
     //here mutate is passed data as an argument. mutate(data) by handleSubmit
     <Form onSubmit={handleSubmit(onSubmit, onError)}>
@@ -164,7 +153,7 @@ function CreateCabinForm({ cabin = {} }) {
           Cancel
         </Button>
         <Button disabled={isWorking}>
-          {isEditSession ? 'Edit cabin' : 'Add cabin'}
+          {isEditSession ? 'Edit cabin' : 'Create new cabin'}
         </Button>
       </FormRow>
     </Form>
