@@ -3,12 +3,13 @@
 import supabase, { supabaseUrl } from './supabase';
 
 export async function createEditCabin({ newCabin, id = null }) {
-  const hasNewImage = newCabin.image.name ? true : false;
+  console.log(newCabin);
+  const hasNewImage = newCabin?.image?.name ? true : false;
 
-  console.log(hasNewImage);
-  console.log(newCabin.image.length);
   //construct image path
-  const imgName = `${Math.random()}-${newCabin.image.name}`.replaceAll('/', '');
+  const imgName = hasNewImage
+    ? `${Math.random()}-${newCabin.image.name}`.replaceAll('/', '')
+    : '';
   const imgPath = hasNewImage
     ? `${supabaseUrl}/storage/v1/object/public/cabin-images/${imgName}`
     : newCabin.image;

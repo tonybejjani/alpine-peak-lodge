@@ -1,7 +1,5 @@
 /** @format */
 import { useForm } from 'react-hook-form';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import toast from 'react-hot-toast';
 
 import Input from '../../ui/Input';
 import Form from '../../ui/Form';
@@ -9,8 +7,8 @@ import Button from '../../ui/Button';
 import FileInput from '../../ui/FileInput';
 import Textarea from '../../ui/Textarea';
 import FormRow from '../../ui/FormRow';
-
-import { createEditCabin } from '../../services/apiCabins';
+import { useCreateCabin } from './useCreateCabin';
+import { useEditCabin } from './useEditCabin';
 
 function CreateCabinForm({ cabin = {} }) {
   const { id: editCabinId, ...cabinEditValues } = cabin;
@@ -24,39 +22,9 @@ function CreateCabinForm({ cabin = {} }) {
 
   const { errors } = formState;
 
-  // console.log(isEditSession);
-  const queryClient = useQueryClient();
-  const {
-    isLoading: isCreating,
+  const { isCreating, createCabin } = useCreateCabin();
 
-    mutate: createCabin,
-  } = useMutation({
-    mutationFn: createEditCabin,
-    onSuccess: () => {
-      toast.success('Cabin successfully added.');
-      queryClient.invalidateQueries({
-        queryKey: ['cabins'],
-      });
-      // reset();
-    },
-    onError: (err) => toast.error(err.message),
-  });
-
-  const {
-    isLoading: isEditing,
-
-    mutate: editCabin,
-  } = useMutation({
-    mutationFn: createEditCabin,
-    onSuccess: () => {
-      toast.success('Cabin successfully edited.');
-      queryClient.invalidateQueries({
-        queryKey: ['cabins'],
-      });
-      // reset();
-    },
-    onError: (err) => toast.error(err.message),
-  });
+  const { isEditing, editCabin } = useEditCabin();
 
   const isWorking = isCreating || isEditing;
 
@@ -74,9 +42,16 @@ function CreateCabinForm({ cabin = {} }) {
       });
     } else {
       console.log('createCabin');
-      createCabin({
-        newCabin: { ...data, image },
-      });
+      createCabin(
+        {
+          newCabin: { ...data, image },
+        },
+        {
+          // data: returned data by the createEditAsync function
+
+          onSuccess: (data) => reset(),
+        }
+      );
     }
   }
 
@@ -135,10 +110,7 @@ function CreateCabinForm({ cabin = {} }) {
         />
       </FormRow>
 
-      <FormRow
-        label="Description for Website"
-        error={errors?.description?.message}
-      >
+      <FormRow label="Description for Website">
         <Textarea
           type="number"
           id="description"
