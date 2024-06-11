@@ -8,40 +8,40 @@ import FileInput from '../../ui/FileInput';
 import Textarea from '../../ui/Textarea';
 import FormRow from '../../ui/FormRow';
 import { useCreateCabin } from './useCreateCabin';
-import { useEditCabin } from './useEditCabin';
+import { useUpdateCabin } from './useUpdateCabin';
 
 function CreateCabinForm({ cabin = {} }) {
-  const { id: editCabinId, ...cabinEditValues } = cabin;
+  const { id: updateCabinId, ...cabinUpdateValues } = cabin;
 
   console.log(cabin);
-  const isEditSession = Boolean(editCabinId);
+  const isUpdateSession = Boolean(updateCabinId);
 
   const { register, handleSubmit, reset, getValues, formState } = useForm({
-    defaultValues: { ...cabinEditValues },
+    defaultValues: { ...cabinUpdateValues },
   });
 
   const { errors } = formState;
 
   const { isCreating, createCabin } = useCreateCabin();
 
-  const { isEditing, editCabin } = useEditCabin();
+  const { isUpdating, updateCabin } = useUpdateCabin();
 
-  const isWorking = isCreating || isEditing;
+  const isWorking = isCreating || isUpdating;
 
   function onSubmit(data) {
-    const image = data?.image[0]?.name ? data.image[0] : cabinEditValues.image;
+    const image = data?.image[0]?.name
+      ? data.image[0]
+      : cabinUpdateValues.image;
 
-    if (isEditSession) {
-      console.log('editCabin');
-      editCabin({
+    if (isUpdateSession) {
+      updateCabin({
         newCabin: {
           ...data,
           image,
         },
-        id: editCabinId,
+        id: updateCabinId,
       });
     } else {
-      console.log('createCabin');
       createCabin(
         {
           newCabin: { ...data, image },
@@ -55,13 +55,9 @@ function CreateCabinForm({ cabin = {} }) {
     }
   }
 
-  function onError(errors) {
-    // console.log(errors);
-  }
-
   return (
     //here mutate is passed data as an argument. mutate(data) by handleSubmit
-    <Form onSubmit={handleSubmit(onSubmit, onError)}>
+    <Form onSubmit={handleSubmit(onSubmit)}>
       <FormRow label="Cabin name" error={errors?.name?.message}>
         <Input
           type="text"
@@ -125,7 +121,7 @@ function CreateCabinForm({ cabin = {} }) {
           id="image"
           accept="image/*"
           {...register('image', {
-            required: isEditSession ? false : 'This field is required',
+            required: isUpdateSession ? false : 'This field is required',
           })}
         />
       </FormRow>
@@ -136,7 +132,7 @@ function CreateCabinForm({ cabin = {} }) {
           Cancel
         </Button>
         <Button disabled={isWorking}>
-          {isEditSession ? 'Edit cabin' : 'Add cabin'}
+          {isUpdateSession ? 'Update cabin' : 'Add cabin'}
         </Button>
       </FormRow>
     </Form>

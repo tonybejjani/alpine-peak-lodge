@@ -2,7 +2,7 @@
 
 import supabase, { supabaseUrl } from './supabase';
 
-export async function createEditCabin({ newCabin, id = null }) {
+export async function createUpdateCabin({ newCabin, id = null }) {
   console.log(newCabin);
   const hasNewImage = newCabin?.image?.name ? true : false;
 
