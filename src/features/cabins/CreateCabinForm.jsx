@@ -68,7 +68,10 @@ function CreateCabinForm({ cabin = {}, onCloseModal }) {
 
   return (
     //here mutate is passed data as an argument. mutate(data) by handleSubmit
-    <Form onSubmit={handleSubmit(onSubmit)}>
+    <Form
+      onSubmit={handleSubmit(onSubmit)}
+      type={onCloseModal ? 'modal' : 'regular'}
+    >
       <FormRow label="Cabin name" error={errors?.name?.message}>
         <Input
           type="text"

@@ -1,6 +1,5 @@
 /** @format */
 
-import { createContext } from 'react';
 import { createPortal } from 'react-dom';
 import { HiXMark } from 'react-icons/hi2';
 import styled from 'styled-components';
@@ -53,8 +52,6 @@ const Button = styled.button`
     color: var(--color-grey-500);
   }
 `;
-
-const ModalContext = createContext();
 
 function Modal({ onClose, children }) {
   // with portal
