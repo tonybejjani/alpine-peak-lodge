@@ -1,6 +1,6 @@
 /** @format */
 
-import { createContext } from 'react';
+import { createContext, useContext, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { HiXMark } from 'react-icons/hi2';
 import styled from 'styled-components';
@@ -54,10 +54,31 @@ const Button = styled.button`
   }
 `;
 
+//1. Create Context
 const ModalContext = createContext();
 
-function Modal({ onClose, children }) {
-  // with portal
+//2. Create parent component
+function Modal({ children }) {
+  const [openName, setOpenName] = useState('');
+
+  const close = () => setOpenName('');
+  const open = setOpenName;
+
+  return (
+    <ModalContext.Provider value={{ openName, close, open }}>
+      <span>{children}</span>
+    </ModalContext.Provider>
+  );
+}
+
+//3. Create child components
+function Open({ children, opens }) {
+  const { open } = useContext(ModalContext);
+
+  return <span>{Children}</span>;
+}
+function Window({ onClose, children, name }) {
+  //with portal
   return createPortal(
     <Overlay>
       <StyledModal>
@@ -69,18 +90,9 @@ function Modal({ onClose, children }) {
     </Overlay>,
     document.body
   );
-
-  // without portal
-  // return (
-  //   <Overlay>
-  //     <StyledModal>
-  //       <Button onClick={onClose}>
-  //         <HiXMark />
-  //       </Button>
-  //       {children}
-  //     </StyledModal>
-  //   </Overlay>
-  // );
 }
+
+Modal.Open = Open;
+Modal.Window = Window;
 
 export default Modal;
