@@ -97,9 +97,9 @@ function Window({ children, name: WindowName }) {
       }
     };
 
-    document.body.addEventListener('click', handleClick);
+    document.body.addEventListener('click', handleClick, true);
 
-    return () => document.body.removeEventListener('click', handleClick);
+    return () => document.body.removeEventListener('click', handleClick, true);
   }, [close]);
 
   if (openName !== WindowName) return null;
