@@ -13,7 +13,6 @@ import { useUpdateCabin } from './useUpdateCabin';
 function CreateCabinForm({ cabin = {}, onCloseModal }) {
   const { id: updateCabinId, ...cabinUpdateValues } = cabin;
 
-  console.log(cabin);
   const isUpdateSession = Boolean(updateCabinId);
 
   const { register, handleSubmit, reset, getValues, formState } = useForm({

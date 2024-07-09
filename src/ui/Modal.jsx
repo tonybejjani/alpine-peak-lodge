@@ -1,6 +1,13 @@
 /** @format */
 
-import { cloneElement, createContext, useContext, useState } from 'react';
+import {
+  cloneElement,
+  createContext,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import { createPortal } from 'react-dom';
 import { HiXMark } from 'react-icons/hi2';
 import styled from 'styled-components';
@@ -80,12 +87,27 @@ function Open({ children, opens: opensWindowName }) {
 
 function Window({ children, name: WindowName }) {
   const { openName, close } = useContext(ModalContext);
-  //with portal
+
+  const ref = useRef();
+
+  useEffect(() => {
+    const handleClick = (e) => {
+      if (ref.current && !ref.current.contains(e.target)) {
+        close();
+      }
+    };
+
+    document.body.addEventListener('click', handleClick);
+
+    return () => document.body.removeEventListener('click', handleClick);
+  }, [close]);
 
   if (openName !== WindowName) return null;
+
+  //with portal
   return createPortal(
     <Overlay>
-      <StyledModal>
+      <StyledModal ref={ref}>
         <Button onClick={close}>
           <HiXMark />
         </Button>
@@ -96,6 +118,7 @@ function Window({ children, name: WindowName }) {
   );
 }
 
+//4. Assign child components to parent as properties
 Modal.Open = Open;
 Modal.Window = Window;
 
