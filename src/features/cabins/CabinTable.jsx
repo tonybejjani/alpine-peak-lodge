@@ -37,19 +37,18 @@ function CabinTable() {
   const { isLoading, cabins, error } = useCabins();
   const [searchParams] = useSearchParams();
 
-  const discountParamValue = searchParams.get('discount');
-
-  let filteredCabins;
-  if (discountParamValue === 'all') filteredCabins = cabins;
-
-  if (discountParamValue === 'no-discount')
-    filteredCabins = cabins.filter((cabin) => cabin.discount === 0);
-
-  if (discountParamValue === 'with-discount')
-    filteredCabins = cabins.filter((cabin) => cabin.discount > 0);
-
-  console.log(filteredCabins);
   if (isLoading) return <Spinner />;
+
+  const paramValue = searchParams.get('discount') || 'all';
+
+  let filteredData;
+  if (paramValue === 'all') filteredData = cabins;
+
+  if (paramValue === 'no-discount')
+    filteredData = cabins.filter((cabin) => cabin.discount === 0);
+
+  if (paramValue === 'with-discount')
+    filteredData = cabins.filter((cabin) => cabin.discount > 0);
 
   return (
     <Menus>
@@ -64,9 +63,9 @@ function CabinTable() {
         </Table.Header>
 
         <Table.Body
-          data={filteredCabins}
-          render={(filteredCabins) => (
-            <CabinRow key={filteredCabins.id} cabin={filteredCabins} />
+          data={filteredData}
+          render={(filteredData) => (
+            <CabinRow key={filteredData.id} cabin={filteredData} />
           )}
         />
       </Table>
