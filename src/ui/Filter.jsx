@@ -37,23 +37,34 @@ const FilterButton = styled.button`
   }
 `;
 
-export default function Filter() {
+export default function Filter({ filterField, options, activeFilter }) {
   const [searchParams, setSearchParams] = useSearchParams();
 
+  const currentFilter = searchParams.get(filterField) || options[0].value;
+
+  //set initial fitler field option to specified active filter on loading the page
+  if (!currentFilter) {
+    searchParams.set(filterField, activeFilter);
+    setSearchParams(searchParams);
+  }
+
   function handleUrlChange(value) {
-    searchParams.set('discount', value);
+    searchParams.set(filterField, value);
     setSearchParams(searchParams);
   }
 
   return (
     <StyledFilter>
-      <FilterButton onClick={() => handleUrlChange('all')}>All</FilterButton>
-      <FilterButton onClick={() => handleUrlChange('with-discount')}>
-        With discount
-      </FilterButton>
-      <FilterButton onClick={() => handleUrlChange('no-discount')}>
-        No discount
-      </FilterButton>
+      {options.map((option) => (
+        <FilterButton
+          key={option.label}
+          active={option.value === currentFilter}
+          disabled={option.value === currentFilter}
+          onClick={() => handleUrlChange(option.value)}
+        >
+          {option.label}
+        </FilterButton>
+      ))}
     </StyledFilter>
   );
 }
