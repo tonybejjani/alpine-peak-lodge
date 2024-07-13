@@ -5,6 +5,8 @@ import Spinner from '../../ui/Spinner';
 import CabinRow from './CabinRow';
 import { useCabins } from './useCabins';
 import Table from '../../ui/Table';
+import Menus from '../../ui/Menus';
+import { useSearchParams } from 'react-router-dom';
 
 // const Table = styled.div`
 //   border: 1px solid var(--color-grey-200);
@@ -33,24 +35,42 @@ import Table from '../../ui/Table';
 function CabinTable() {
   // queryFn is responsible for fetching the data and it needs to return a promise.
   const { isLoading, cabins, error } = useCabins();
+  const [searchParams] = useSearchParams();
 
+  const discountParamValue = searchParams.get('discount');
+
+  let filteredCabins;
+  if (discountParamValue === 'all') filteredCabins = cabins;
+
+  if (discountParamValue === 'no-discount')
+    filteredCabins = cabins.filter((cabin) => cabin.discount === 0);
+
+  if (discountParamValue === 'with-discount')
+    filteredCabins = cabins.filter((cabin) => cabin.discount > 0);
+
+  console.log(filteredCabins);
   if (isLoading) return <Spinner />;
 
   return (
-    <Table columns="0.6fr 1.8fr 2.2fr 1fr 1fr 1fr">
-      <Table.Header>
-        <div></div>
-        <div>Cabin</div>
-        <div>Capacity</div>
-        <div>Price</div>
-        <div>Discount</div>
-        <div></div>
-      </Table.Header>
-      <Table.Body
-        data={cabins}
-        render={(cabin) => <CabinRow key={cabin.id} cabin={cabin} />}
-      />
-    </Table>
+    <Menus>
+      <Table columns="0.6fr 1.8fr 2.2fr 1fr 1fr 1fr">
+        <Table.Header>
+          <div></div>
+          <div>Cabin</div>
+          <div>Capacity</div>
+          <div>Price</div>
+          <div>Discount</div>
+          <div></div>
+        </Table.Header>
+
+        <Table.Body
+          data={filteredCabins}
+          render={(filteredCabins) => (
+            <CabinRow key={filteredCabins.id} cabin={filteredCabins} />
+          )}
+        />
+      </Table>
+    </Menus>
   );
 }
 
