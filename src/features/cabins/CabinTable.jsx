@@ -6,6 +6,7 @@ import { useCabins } from './useCabins';
 import Table from '../../ui/Table';
 import Menus from '../../ui/Menus';
 import { useSearchParams } from 'react-router-dom';
+import Empty from '../../ui/Empty';
 
 function CabinTable() {
   // queryFn is responsible for fetching the data and it needs to return a promise.
@@ -13,6 +14,8 @@ function CabinTable() {
   const [searchParams] = useSearchParams();
 
   if (isLoading) return <Spinner />;
+
+  if (!cabins.length) return <Empty resourceName="cabins" />;
 
   const discountValue = searchParams.get('discount') || 'all';
 
