@@ -10,7 +10,6 @@ import { useBookings } from './useBookings';
 function BookingTable() {
   const { isLoading, bookings, error } = useBookings();
 
-  console.log(bookings);
   if (!bookings) return <Empty resourceName="bookings" />;
 
   if (isLoading) return <Spinner />;
