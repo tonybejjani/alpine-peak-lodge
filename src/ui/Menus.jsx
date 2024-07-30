@@ -49,6 +49,7 @@ const StyledButton = styled.button`
   background: none;
   border: none;
   padding: 1.2rem 2.4rem;
+  white-space: nowrap;
   font-size: 1.4rem;
   transition: all 0.2s;
 
@@ -96,7 +97,7 @@ function Toggle({ id }) {
       y: rect.height,
     });
 
-    open === '' || openId !== id ? open(id) : close();
+    openId === '' || openId !== id ? open(id) : close();
   }
 
   return (

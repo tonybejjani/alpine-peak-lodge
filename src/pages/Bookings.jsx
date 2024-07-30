@@ -7,11 +7,15 @@ import BookingTableOperations from '../features/bookings/BookingTableOperations'
 
 function Bookings() {
   return (
-    <Row type="vertical">
-      <Heading as="h1">All bookings</Heading>
-      <BookingTableOperations />
-      <BookingTable />
-    </Row>
+    <>
+      <Row type="horizontal">
+        <Heading as="h1">All bookings</Heading>
+        <BookingTableOperations />
+      </Row>
+      <Row>
+        <BookingTable />
+      </Row>
+    </>
   );
 }
 
