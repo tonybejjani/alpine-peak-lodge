@@ -41,7 +41,11 @@ export default function Filter({ filterField, options }) {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const currentFilter = searchParams.get(filterField) || options[0].value;
-
+  if (searchParams.has('page')) {
+    console.log(true);
+  } else {
+    console.log(false);
+  }
   //set initial fitler field option to specified active filter on loading the page
   if (!currentFilter) {
     searchParams.set(filterField, currentFilter);
@@ -49,6 +53,11 @@ export default function Filter({ filterField, options }) {
   }
 
   function handleUrlChange(value) {
+    //remove page parameter when switching to another filter to avoid wronng page navigations
+    if (searchParams.has('page')) {
+      searchParams.delete('page');
+      setSearchParams(searchParams);
+    }
     searchParams.set(filterField, value);
     setSearchParams(searchParams);
   }
